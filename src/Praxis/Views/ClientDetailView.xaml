@@ -1,0 +1,98 @@
+<UserControl x:Class="Praxis.Views.ClientDetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Praxis.ViewModels"
+             xmlns:views="clr-namespace:Praxis.Views"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:ClientDetailViewModel}"
+             d:DesignHeight="600" d:DesignWidth="800">
+    
+    <UserControl.Resources>
+        <views:BooleanToStringConverter x:Key="NewClientHeaderConverter" 
+                                        TrueValue="New Client" 
+                                        FalseValue="Edit Client" />
+    </UserControl.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,24">
+            <TextBlock Text="{Binding IsNewClient, Converter={StaticResource NewClientHeaderConverter}}"
+                       Style="{StaticResource HeaderLarge}" />
+        </StackPanel>
+        
+        <!-- Form -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel MaxWidth="600">
+                <!-- Preferred Name -->
+                <StackPanel Margin="0,0,0,16">
+                    <TextBlock Text="Preferred Name" Style="{StaticResource FormLabel}" />
+                    <TextBox Style="{StaticResource TextInput}" 
+                             Text="{Binding Client.PreferredName, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                
+                <!-- Full Name -->
+                <StackPanel Margin="0,0,0,16">
+                    <TextBlock Text="Full Name (optional)" Style="{StaticResource FormLabel}" />
+                    <TextBox Style="{StaticResource TextInput}" 
+                             Text="{Binding Client.FullName, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                
+                <!-- Pronouns -->
+                <StackPanel Margin="0,0,0,16">
+                    <TextBlock Text="Pronouns" Style="{StaticResource FormLabel}" />
+                    <TextBox Style="{StaticResource TextInput}" 
+                             Text="{Binding Client.Pronouns, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                
+                <!-- Primary Focus -->
+                <StackPanel Margin="0,0,0,16">
+                    <TextBlock Text="Primary Focus" Style="{StaticResource FormLabel}" />
+                    <TextBox Style="{StaticResource TextInput}" 
+                             Text="{Binding Client.PrimaryFocus, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                
+                <!-- Context -->
+                <StackPanel Margin="0,0,0,16">
+                    <TextBlock Text="Context" Style="{StaticResource FormLabel}" />
+                    <TextBlock Text="Brief background for your own recall" 
+                               Style="{StaticResource TextSmallMuted}" Margin="0,0,0,6" />
+                    <TextBox Style="{StaticResource TextArea}" 
+                             Height="120"
+                             Text="{Binding Client.Context, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                
+                <!-- Therapeutic Notes -->
+                <StackPanel Margin="0,0,0,16">
+                    <TextBlock Text="Therapeutic Notes" Style="{StaticResource FormLabel}" />
+                    <TextBlock Text="Notes about approach, relationship, considerations" 
+                               Style="{StaticResource TextSmallMuted}" Margin="0,0,0,6" />
+                    <TextBox Style="{StaticResource TextArea}" 
+                             Height="120"
+                             Text="{Binding Client.TherapeuticNotes, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+        
+        <!-- Actions -->
+        <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right"
+                    Margin="0,24,0,0">
+            <Button Content="Cancel" 
+                    Style="{StaticResource SecondaryButton}"
+                    Command="{Binding CancelCommand}"
+                    Margin="0,0,12,0" />
+            <Button Content="Save" 
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding SaveCommand}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

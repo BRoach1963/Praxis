@@ -1,0 +1,88 @@
+<Window x:Class="Praxis.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Praxis.ViewModels"
+        mc:Ignorable="d"
+        Title="Praxis" 
+        Height="800" 
+        Width="1200"
+        MinHeight="600"
+        MinWidth="900"
+        WindowStartupLocation="CenterScreen"
+        Icon="Assets/praxis-logo.png"
+        Background="{DynamicResource AppBackgroundBrush}">
+    
+    <Window.InputBindings>
+        <!-- Global keyboard shortcuts -->
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding NewClientCommand}" />
+        <KeyBinding Key="F" Modifiers="Ctrl" Command="{Binding SearchCommand}" />
+        <KeyBinding Key="D1" Modifiers="Ctrl" Command="{Binding NavigateToClientsCommand}" />
+        <KeyBinding Key="D2" Modifiers="Ctrl" Command="{Binding NavigateToPrepCommand}" />
+        <KeyBinding Key="D3" Modifiers="Ctrl" Command="{Binding NavigateToReflectCommand}" />
+        <KeyBinding Key="T" Modifiers="Ctrl" Command="{Binding ToggleThemeCommand}" />
+    </Window.InputBindings>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        
+        <!-- Navigation Sidebar -->
+        <Border Grid.Column="0" 
+                Background="{DynamicResource PanelBackgroundBrush}"
+                BorderBrush="{DynamicResource DividerBrush}"
+                BorderThickness="0,0,1,0">
+            <DockPanel>
+                <!-- App Header -->
+                <StackPanel DockPanel.Dock="Top" Margin="16,20,16,24">
+                    <TextBlock Text="Praxis" 
+                               FontSize="24"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource PrimaryTextBrush}" />
+                    <TextBlock Text="Your clinical workspace" 
+                               Foreground="{DynamicResource SecondaryTextBrush}"
+                               Margin="0,4,0,0" />
+                </StackPanel>
+                
+                <!-- Navigation Items -->
+                <StackPanel DockPanel.Dock="Top" Margin="8,0">
+                    <Button Content="📋 Clients" 
+                            Style="{StaticResource NavButton}"
+                            Command="{Binding NavigateToClientsCommand}" />
+                    <Button Content="🎯 Prepare" 
+                            Style="{StaticResource NavButton}"
+                            Command="{Binding NavigateToPrepCommand}" />
+                    <Button Content="💭 Reflect" 
+                            Style="{StaticResource NavButton}"
+                            Command="{Binding NavigateToReflectCommand}" />
+                </StackPanel>
+                
+                <!-- Bottom Section -->
+                <StackPanel DockPanel.Dock="Bottom" Margin="16,0,16,16">
+                    <!-- Theme Toggle -->
+                    <Button Content="🌓 Toggle Theme" 
+                            Style="{StaticResource NavButton}"
+                            Command="{Binding ToggleThemeCommand}"
+                            Margin="0,0,0,12" />
+                    <Separator Background="{DynamicResource DividerBrush}" Margin="0,0,0,12" />
+                    <TextBlock Text="Prickly Cactus Software" 
+                               FontSize="11"
+                               Foreground="{DynamicResource SecondaryTextBrush}"
+                               HorizontalAlignment="Center" />
+                </StackPanel>
+                
+                <Grid /> <!-- Spacer -->
+            </DockPanel>
+        </Border>
+        
+        <!-- Main Content Area -->
+        <Border Grid.Column="1" 
+                Background="{DynamicResource SurfaceBackgroundBrush}"
+                Padding="24">
+            <ContentControl Content="{Binding CurrentView}" />
+        </Border>
+    </Grid>
+</Window>

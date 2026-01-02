@@ -1,0 +1,127 @@
+<UserControl x:Class="Praxis.Views.SessionReflectView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Praxis.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:SessionReflectViewModel}"
+             d:DesignHeight="600" d:DesignWidth="800">
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="280" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        
+        <!-- Client Selector -->
+        <Border Grid.Column="0" 
+                Background="{DynamicResource BackgroundSecondary}"
+                Padding="16">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" 
+                           Text="Select Client" 
+                           Style="{StaticResource HeaderSmall}"
+                           Margin="0,0,0,12" />
+                
+                <ListBox ItemsSource="{Binding Clients}"
+                         SelectedItem="{Binding SelectedClient}"
+                         BorderThickness="0"
+                         Background="Transparent">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding PreferredName}" 
+                                       Padding="8,6" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </Border>
+        
+        <!-- Reflection Content -->
+        <ScrollViewer Grid.Column="1" Padding="24" VerticalScrollBarVisibility="Auto">
+            <StackPanel MaxWidth="700">
+                <!-- Header -->
+                <StackPanel Margin="0,0,0,24">
+                    <TextBlock Text="Session Reflection" Style="{StaticResource HeaderLarge}" />
+                    <TextBlock Style="{StaticResource TextMuted}" Margin="0,4,0,0">
+                        <Run Text="A quiet space to capture your thoughts" />
+                    </TextBlock>
+                </StackPanel>
+                
+                <!-- Selected Client Info -->
+                <Border Style="{StaticResource Card}" 
+                        Margin="0,0,0,24"
+                        Visibility="{Binding SelectedClient, Converter={x:Null}}">
+                    <StackPanel>
+                        <TextBlock Text="{Binding SelectedClient.PreferredName}" 
+                                   Style="{StaticResource HeaderMedium}" />
+                        <TextBlock Text="{Binding SelectedClient.PrimaryFocus}" 
+                                   Style="{StaticResource TextMuted}"
+                                   Margin="0,4,0,0" />
+                    </StackPanel>
+                </Border>
+                
+                <!-- Reflection Form -->
+                <StackPanel Visibility="{Binding SelectedClient, Converter={x:Null}}">
+                    <!-- Private Reflection -->
+                    <StackPanel Margin="0,0,0,20">
+                        <TextBlock Text="Private Reflection" Style="{StaticResource FormLabel}" />
+                        <TextBlock Text="Your thoughts, observations, hypotheses — for your eyes only" 
+                                   Style="{StaticResource TextSmallMuted}" Margin="0,0,0,6" />
+                        <TextBox Style="{StaticResource TextArea}"
+                                 Height="180"
+                                 Text="{Binding ReflectionText, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                    
+                    <!-- Key Themes -->
+                    <StackPanel Margin="0,0,0,20">
+                        <TextBlock Text="Key Themes" Style="{StaticResource FormLabel}" />
+                        <TextBlock Text="Patterns or topics that emerged" 
+                                   Style="{StaticResource TextSmallMuted}" Margin="0,0,0,6" />
+                        <TextBox Style="{StaticResource TextInput}"
+                                 Text="{Binding KeyThemes, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                    
+                    <!-- Follow-up Items -->
+                    <StackPanel Margin="0,0,0,20">
+                        <TextBlock Text="Follow-up Items" Style="{StaticResource FormLabel}" />
+                        <TextBlock Text="Things to remember for next session" 
+                                   Style="{StaticResource TextSmallMuted}" Margin="0,0,0,6" />
+                        <TextBox Style="{StaticResource TextArea}"
+                                 Height="80"
+                                 Text="{Binding FollowUpItems, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                    
+                    <!-- Actions -->
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                        <Button Content="Save Reflection" 
+                                Style="{StaticResource PrimaryButton}"
+                                Command="{Binding SaveReflectionCommand}"
+                                Margin="0,0,12,0" />
+                        <Button Content="Clear" 
+                                Style="{StaticResource SecondaryButton}"
+                                Command="{Binding ClearCommand}" />
+                    </StackPanel>
+                    
+                    <!-- Error Message -->
+                    <TextBlock Text="{Binding ErrorMessage}" 
+                               Foreground="{DynamicResource StatusAttention}"
+                               Margin="0,12,0,0"
+                               Visibility="{Binding ErrorMessage, Converter={x:Null}}" />
+                </StackPanel>
+                
+                <!-- Empty State -->
+                <StackPanel HorizontalAlignment="Center" 
+                            VerticalAlignment="Center"
+                            Margin="0,100,0,0"
+                            Visibility="{Binding SelectedClient, Converter={x:Null}}">
+                    <TextBlock Text="Select a client to reflect" 
+                               Style="{StaticResource TextMuted}"
+                               FontSize="16"
+                               HorizontalAlignment="Center" />
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

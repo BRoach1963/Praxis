@@ -1,0 +1,126 @@
+<UserControl x:Class="Praxis.Views.SessionPrepView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Praxis.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:SessionPrepViewModel}"
+             d:DesignHeight="600" d:DesignWidth="800">
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="280" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        
+        <!-- Client Selector -->
+        <Border Grid.Column="0" 
+                Background="{DynamicResource BackgroundSecondary}"
+                Padding="16">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" 
+                           Text="Select Client" 
+                           Style="{StaticResource HeaderSmall}"
+                           Margin="0,0,0,12" />
+                
+                <ListBox ItemsSource="{Binding Clients}"
+                         SelectedItem="{Binding SelectedClient}"
+                         BorderThickness="0"
+                         Background="Transparent">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding PreferredName}" 
+                                       Padding="8,6" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </Border>
+        
+        <!-- Prep Content -->
+        <ScrollViewer Grid.Column="1" Padding="24" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <StackPanel Visibility="{Binding SelectedClient, Converter={x:Null}}">
+                    <!-- Header -->
+                    <StackPanel Margin="0,0,0,24">
+                        <TextBlock Text="Session Preparation" Style="{StaticResource HeaderLarge}" />
+                        <TextBlock Style="{StaticResource TextMuted}" Margin="0,4,0,0">
+                            <Run Text="Preparing for session with " />
+                            <Run Text="{Binding SelectedClient.PreferredName}" FontWeight="Medium" />
+                        </TextBlock>
+                    </StackPanel>
+                    
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="280" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Prep Notes -->
+                        <StackPanel Grid.Column="0" Margin="0,0,24,0">
+                            <TextBlock Text="Preparation Notes" Style="{StaticResource FormLabel}" />
+                            <TextBox Style="{StaticResource TextArea}"
+                                     Height="300"
+                                     Text="{Binding PrepNotes, UpdateSourceTrigger=PropertyChanged}" />
+                            
+                            <Button Content="Save Prep" 
+                                    Style="{StaticResource PrimaryButton}"
+                                    Command="{Binding SavePrepCommand}"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,16,0,0" />
+                        </StackPanel>
+                        
+                        <!-- Context Panel -->
+                        <StackPanel Grid.Column="1">
+                            <!-- Active Goals -->
+                            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                                <StackPanel>
+                                    <TextBlock Text="Active Goals" Style="{StaticResource HeaderSmall}" Margin="0,0,0,8" />
+                                    <ItemsControl ItemsSource="{Binding ActiveGoals}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding}" 
+                                                           Style="{StaticResource TextBody}"
+                                                           Margin="0,4,0,0" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- Recent Notes -->
+                            <Border Style="{StaticResource Card}">
+                                <StackPanel>
+                                    <TextBlock Text="Recent Sessions" Style="{StaticResource HeaderSmall}" Margin="0,0,0,8" />
+                                    <ItemsControl ItemsSource="{Binding RecentNotes}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Margin="0,8,0,0">
+                                                    <TextBlock Text="{Binding SessionDate, StringFormat='{}{0:MMM d}'}" 
+                                                               Style="{StaticResource TextMuted}" />
+                                                    <TextBlock Text="{Binding Summary}" 
+                                                               Style="{StaticResource TextBody}"
+                                                               TextTrimming="CharacterEllipsis" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+                
+                <!-- Empty State -->
+                <StackPanel HorizontalAlignment="Center" 
+                            VerticalAlignment="Center"
+                            Visibility="{Binding SelectedClient, Converter={x:Null}}">
+                    <TextBlock Text="Select a client to prepare" 
+                               Style="{StaticResource TextMuted}"
+                               FontSize="16" />
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

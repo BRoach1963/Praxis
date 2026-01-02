@@ -1,0 +1,28 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Praxis.Colors.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <SolidColorBrush x:Key="AppBackgroundBrush" Color="#FF141A19"/>
+    <SolidColorBrush x:Key="SurfaceBackgroundBrush" Color="#FF1B2423"/>
+    <SolidColorBrush x:Key="PanelBackgroundBrush" Color="#FF22302E"/>
+
+    <SolidColorBrush x:Key="PrimaryTextBrush" Color="#FFF2F3F3"/>
+    <SolidColorBrush x:Key="SecondaryTextBrush" Color="#FFB5C1BE"/>
+
+    <SolidColorBrush x:Key="PrimaryAccentBrush" Color="{StaticResource PraxisForestTeal}"/>
+    <SolidColorBrush x:Key="SecondaryAccentBrush" Color="{StaticResource PraxisCopper}"/>
+
+    <SolidColorBrush x:Key="ButtonPrimaryBackgroundBrush" Color="{StaticResource PraxisForestTeal}"/>
+    <SolidColorBrush x:Key="ButtonPrimaryForegroundBrush" Color="#FFFFFFFF"/>
+
+    <SolidColorBrush x:Key="ButtonSecondaryBackgroundBrush" Color="#00000000"/>
+    <SolidColorBrush x:Key="ButtonSecondaryForegroundBrush" Color="{StaticResource PraxisMistGray}"/>
+
+    <SolidColorBrush x:Key="DividerBrush" Color="#33FFFFFF"/>
+    <SolidColorBrush x:Key="FocusBrush" Color="{StaticResource PraxisCopper}"/>
+
+</ResourceDictionary>

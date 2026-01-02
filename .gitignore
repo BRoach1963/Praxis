@@ -1,0 +1,25 @@
+# Praxis Build Artifacts
+bin/
+obj/
+*.user
+*.suo
+*.cache
+
+# IDE
+.vs/
+.vscode/
+*.DotSettings.user
+
+# Data files (keep local database private)
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

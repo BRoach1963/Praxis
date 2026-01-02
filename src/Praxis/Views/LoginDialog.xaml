@@ -1,0 +1,124 @@
+<Window x:Class="Praxis.Views.LoginDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Praxis - Login"
+        Height="750"
+        Width="450"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        WindowStyle="SingleBorderWindow"
+        Background="{DynamicResource AppBackgroundBrush}"
+        Foreground="{DynamicResource PrimaryTextBrush}"
+        Icon="../Assets/praxis-logo.png">
+    
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Background="{DynamicResource AppBackgroundBrush}">
+        <StackPanel Orientation="Vertical" Margin="40,30,40,30">
+            
+            <!-- Logo -->
+            <Image Source="../Assets/praxis-logo.png" Height="80" Margin="0,0,0,30" HorizontalAlignment="Center" />
+            
+            <!-- Title -->
+            <TextBlock Text="Welcome to Praxis" FontSize="28" FontWeight="Bold" Margin="0,0,0,10" Foreground="{DynamicResource PrimaryTextBrush}" />
+            <TextBlock Text="A calm, private workspace for reflective professional practice." FontSize="12" Margin="0,0,0,30" Foreground="{DynamicResource SecondaryTextBrush}" TextWrapping="Wrap" />
+            
+            <!-- Email Field -->
+            <TextBlock Text="Email Address" FontSize="12" Margin="0,0,0,5" Foreground="{DynamicResource PrimaryTextBrush}" FontWeight="SemiBold" />
+            <Border Background="{DynamicResource SurfaceBackgroundBrush}" BorderBrush="{DynamicResource PrimaryAccentBrush}" BorderThickness="2" CornerRadius="8" Margin="0,0,0,15" Height="44">
+                <TextBox x:Name="EmailTextBox" 
+                         Padding="12,8"
+                         Background="Transparent"
+                         Foreground="{DynamicResource PrimaryTextBrush}"
+                         BorderThickness="0"
+                         FontSize="12"
+                         VerticalContentAlignment="Center" />
+            </Border>
+            
+            <!-- Password Field -->
+            <TextBlock Text="Password" FontSize="12" Margin="0,0,0,5" Foreground="{DynamicResource PrimaryTextBrush}" FontWeight="SemiBold" />
+            <Grid Margin="0,0,0,15" Height="44">
+                <Border Background="{DynamicResource SurfaceBackgroundBrush}" BorderBrush="{DynamicResource PrimaryAccentBrush}" BorderThickness="2" CornerRadius="8">
+                    <Grid>
+                        <!-- Password Box (hidden mode) -->
+                        <PasswordBox x:Name="PasswordBox" 
+                                     Padding="12,8"
+                                     Background="Transparent"
+                                     Foreground="{DynamicResource PrimaryTextBrush}"
+                                     BorderThickness="0"
+                                     FontSize="12"
+                                     VerticalContentAlignment="Center"
+                                     PasswordChanged="PasswordBox_PasswordChanged" />
+                        
+                        <!-- Password TextBox (visible mode) -->
+                        <TextBox x:Name="PasswordTextBox"
+                                 Padding="12,8"
+                                 Background="Transparent"
+                                 Foreground="{DynamicResource PrimaryTextBrush}"
+                                 BorderThickness="0"
+                                 FontSize="12"
+                                 VerticalContentAlignment="Center"
+                                 Visibility="Collapsed"
+                                 TextChanged="PasswordTextBox_TextChanged" />
+                        
+                        <!-- Show/Hide Password Button -->
+                        <Button Content="👁" 
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="{DynamicResource SecondaryTextBrush}"
+                                Click="ShowPasswordButton_Click"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right"
+                                Padding="12,0"
+                                Cursor="Hand" />
+                    </Grid>
+                </Border>
+            </Grid>
+            
+            <!-- Remember Me -->
+            <CheckBox Content="Remember me" Margin="0,0,0,20" Foreground="{DynamicResource PrimaryTextBrush}" IsChecked="False" />
+            
+            <!-- Login Button -->
+            <Border Background="{DynamicResource ButtonPrimaryBackgroundBrush}" CornerRadius="8" Margin="0,0,0,10">
+                <Button x:Name="SignInButton" 
+                        Content="Sign In" 
+                        Height="44"
+                        Background="Transparent"
+                        Foreground="{DynamicResource ButtonPrimaryForegroundBrush}"
+                        FontSize="14"
+                        FontWeight="SemiBold"
+                        Click="SignInButton_Click"
+                        Cursor="Hand"
+                        BorderThickness="0" />
+            </Border>
+            
+            <!-- Error Message -->
+            <TextBlock x:Name="ErrorTextBlock"
+                       Margin="0,0,0,10"
+                       Foreground="Red"
+                       FontSize="11"
+                       TextWrapping="Wrap"
+                       Visibility="Collapsed" />
+            
+            <!-- Forgot Password Link -->
+            <TextBlock Margin="0,10,0,0" TextAlignment="Center">
+                <Hyperlink Foreground="{DynamicResource PrimaryAccentBrush}" Click="ForgotPasswordLink_Click">
+                    Forgot your password?
+                </Hyperlink>
+            </TextBlock>
+            
+            <!-- Exit Button -->
+            <Border Background="{DynamicResource ButtonSecondaryBackgroundBrush}" BorderBrush="{DynamicResource PrimaryAccentBrush}" BorderThickness="2" CornerRadius="8" Margin="0,10,0,0">
+                <Button Content="Exit" 
+                        Height="36"
+                        Background="Transparent"
+                        Foreground="{DynamicResource ButtonSecondaryForegroundBrush}"
+                        FontSize="12"
+                        Click="ExitButton_Click"
+                        Cursor="Hand"
+                        BorderThickness="0" />
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

@@ -23,3 +23,11 @@ logs/
 # OS
 .DS_Store
 Thumbs.db
+
+# Temp/utility projects
+HashGen/
+
+# Sensitive config (contains Supabase keys)
+src/Praxis/Services/SupabaseConfig.cs
+appsettings.*.json
+!appsettings.json

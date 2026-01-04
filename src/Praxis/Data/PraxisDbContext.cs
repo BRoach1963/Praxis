@@ -1,4 +1,3 @@
-using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Praxis.Models;
 
@@ -6,7 +5,7 @@ namespace Praxis.Data;
 
 /// <summary>
 /// Entity Framework DbContext for Praxis.
-/// Uses SQLite for local-first data storage.
+/// Uses PostgreSQL for local data storage.
 /// All data is practice-scoped (multi-tenant).
 /// </summary>
 public class PraxisDbContext : DbContext
@@ -54,16 +53,9 @@ public class PraxisDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        // Store database in user's local app data for privacy and portability
-        var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        var praxisDataPath = Path.Combine(appDataPath, "Praxis");
-        
-        // Ensure directory exists
-        Directory.CreateDirectory(praxisDataPath);
-        
-        var dbPath = Path.Combine(praxisDataPath, "praxis.db");
-        
-        optionsBuilder.UseSqlite($"Data Source={dbPath}");
+        // Use local PostgreSQL database
+        var connectionString = "Host=localhost;Port=5432;Database=praxis;Username=postgres;Password=$teelers4Ever";
+        optionsBuilder.UseNpgsql(connectionString);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

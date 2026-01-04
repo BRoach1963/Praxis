@@ -7,7 +7,7 @@ namespace Praxis.Views
 {
     /// <summary>
     /// Interaction logic for LoginDialog.xaml
-    /// Modal login dialog for Praxis authentication.
+    /// Modal login dialog for Praxis authentication using local PostgreSQL.
     /// </summary>
     public partial class LoginDialog : Window
     {
@@ -101,34 +101,42 @@ namespace Praxis.Views
             // Attempt login
             try
             {
-                var loginResponse = await _authService.LoginAsync(email, password);
+                var loginResult = await _authService.LoginAsync(email, password);
 
-                if (!loginResponse.Success)
+                if (!loginResult.Success)
                 {
-                    ShowError(loginResponse.ErrorMessage ?? "Login failed. Please try again.");
+                    ShowError(loginResult.ErrorMessage ?? "Login failed. Please try again.");
                     SignInButton.IsEnabled = true;
                     return;
                 }
 
-                // Store session
+                // Store session using authenticated user info
+                var user = loginResult.User!;
                 var currentSession = new CurrentSession
                 {
-                    User = loginResponse.User!,
-                    AccessiblePractices = loginResponse.UserPractices ?? new(),
-                    CurrentPractice = loginResponse.UserPractices?.FirstOrDefault(),
-                    Role = PracticeRole.Owner // TODO: Get from practice_user table
+                    User = new AppUser
+                    {
+                        AppUserId = user.UserProfileId,
+                        Email = user.Email,
+                        DisplayName = user.DisplayName,
+                        IsActive = true
+                    },
+                    AccessiblePractices = user.AccessibleFirms.Select(f => new PracticeInfo
+                    {
+                        PracticeId = f.FirmId,
+                        Name = f.Name,
+                        TimeZone = f.TimeZoneIana
+                    }).ToList(),
+                    CurrentPractice = new PracticeInfo
+                    {
+                        PracticeId = user.CurrentFirmId,
+                        Name = user.CurrentFirmName,
+                        TimeZone = user.AccessibleFirms.FirstOrDefault()?.TimeZoneIana ?? "America/Chicago"
+                    },
+                    Role = Enum.TryParse<PracticeRole>(user.CurrentRole, out var role) ? role : PracticeRole.Staff
                 };
 
                 _sessionManager.SetSession(currentSession);
-
-                // Check if password must be changed
-                if (loginResponse.MustChangePassword)
-                {
-                    // TODO: Show PasswordChangeDialog
-                    MessageBox.Show("You must change your password before continuing.", "Praxis", MessageBoxButton.OK, MessageBoxImage.Information);
-                    SignInButton.IsEnabled = true;
-                    return;
-                }
 
                 // Login successful
                 DialogResult = true;

@@ -1,9 +1,12 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Praxis.Data;
 using Praxis.Services;
 using Praxis.ViewModels;
 using Praxis.Views;
+using System.IO;
 using System.Windows;
 
 namespace Praxis;
@@ -28,8 +31,22 @@ public partial class App : Application
 
     private static void ConfigureServices(IServiceCollection services)
     {
-        // Data
-        services.AddDbContext<PraxisDbContext>();
+        // Configuration
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            .AddJsonFile("appsettings.json", optional: false)
+            .Build();
+        services.AddSingleton<IConfiguration>(configuration);
+        
+        // Get connection string
+        var connectionString = configuration.GetConnectionString("PraxisDb") 
+            ?? "Host=localhost;Port=5432;Database=praxis;Username=postgres;Password=$teelers4Ever";
+        
+        // Data - PostgreSQL context with connection string
+        services.AddDbContext<PraxisContext>(options => 
+        {
+            options.UseNpgsql(connectionString);
+        });
         
         // Services
         services.AddSingleton<IThemeService, ThemeService>();
@@ -37,10 +54,9 @@ public partial class App : Application
         services.AddSingleton<IClientService, ClientService>();
         services.AddSingleton<ISessionService, SessionService>();
         
-        // Authentication & Session Management
-        services.AddSingleton(sp => SupabaseService.Instance.Client); // Lazy-loaded Supabase client
-        services.AddSingleton<AuthenticationService>();
-        services.AddSingleton(sp => SessionManager.Instance); // Singleton pattern - use static Instance
+        // Authentication - Local PostgreSQL
+        services.AddSingleton(sp => new AuthenticationService(connectionString));
+        services.AddSingleton(sp => SessionManager.Instance);
         services.AddSingleton<TokenEncryptionService>();
         
         // ViewModels
@@ -59,21 +75,22 @@ public partial class App : Application
     {
         await _host.StartAsync();
 
-        // Ensure database is created
-        using var scope = _host.Services.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<PraxisDbContext>();
-        await dbContext.Database.EnsureCreatedAsync();
-
-        // Initialize Supabase connection
+        // Test PostgreSQL connection
         try
         {
-            await SupabaseService.Instance.InitializeAsync();
-            System.Diagnostics.Debug.WriteLine("✓ Supabase initialized successfully");
+            using var scope = _host.Services.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<PraxisContext>();
+            var canConnect = await dbContext.Database.CanConnectAsync();
+            if (!canConnect)
+            {
+                throw new Exception("Cannot connect to PostgreSQL database.");
+            }
+            System.Diagnostics.Debug.WriteLine("✓ PostgreSQL database connected successfully");
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"✗ Supabase initialization error: {ex.Message}");
-            MessageBox.Show($"Database connection error: {ex.Message}", "Connection Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Diagnostics.Debug.WriteLine($"✗ Database connection error: {ex.Message}");
+            MessageBox.Show($"Database connection error: {ex.Message}\n\nPlease ensure PostgreSQL is running and the 'praxis' database exists.", "Connection Failed", MessageBoxButton.OK, MessageBoxImage.Error);
             Shutdown();
             return;
         }
